@@ -59,7 +59,7 @@ app.post('/payments', async (req, res) => {
 });
 
 // Bonus: routing trace endpoint
-app.get('/v1/payments/:id/routing-trace', (req, res) => {
+app.get('/payments/:id/routing-trace', (req, res) => {
   const trace = routingTraces[req.params.id];
   if (!trace) return res.status(404).json({ error: 'Trace not found' });
   return res.json(trace);
