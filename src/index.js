@@ -1,7 +1,7 @@
 const express = require('express');
 const { selectConnector } = require('./selectConnector.helper');
 const { createPayment } = require('./hyperswitchClient');
-
+const {randomUUID} = require("crypto")
 const app = express();
 app.use(express.json());
 
@@ -9,7 +9,7 @@ app.use(express.json());
 const routingTraces = {};
 
 app.post('/payments', async (req, res) => {
-  const { amount, currency = 'USD' } = req.body;
+  const { amount, currency = 'USD', idempotency_key } = req.body;
 
   if (!amount) {
     return res.status(400).json({ error: 'amount is required' });
@@ -31,6 +31,7 @@ app.post('/payments', async (req, res) => {
       amount,
       currency,
       connector: routingDecision.selected,
+      idempotencyKey: idempotency_key || randomUUID(),
     });
 
     // Step 3: Store trace

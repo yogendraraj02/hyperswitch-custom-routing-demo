@@ -3,7 +3,9 @@ const axios = require("axios");
 const HYPERSWITCH_BASE = "https://sandbox.hyperswitch.io";
 const API_KEY =  process.env.HYPERSWITCH_API_KEY
 
-async function createPayment({ amount, currency, connector }) {
+async function createPayment({ amount, currency, connector, idempotencyKey }) {
+  console.log(amount, currency, connector, idempotencyKey);
+  
   const response = await axios.post(
     `${HYPERSWITCH_BASE}/payments`,
     {
@@ -32,6 +34,7 @@ async function createPayment({ amount, currency, connector }) {
       headers: {
         "api-key": API_KEY,
         "Content-Type": "application/json",
+        "Idempotency-Key": idempotencyKey,
       },
     },
   );
