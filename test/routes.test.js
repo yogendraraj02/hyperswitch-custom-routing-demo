@@ -1,4 +1,4 @@
-const { selectConnector } = require('../src/router');
+const { selectConnector } = require('../src/selectConnector.helper');
 
 describe('Cost-aware routing', () => {
   test('happy path: picks cheapest eligible connector for USD', () => {

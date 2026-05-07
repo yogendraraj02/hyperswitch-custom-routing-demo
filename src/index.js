@@ -1,5 +1,5 @@
 const express = require('express');
-const { selectConnector } = require('./router');
+const { selectConnector } = require('./selectConnector.helper');
 const { createPayment } = require('./hyperswitchClient');
 
 const app = express();
