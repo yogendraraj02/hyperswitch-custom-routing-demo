@@ -54,3 +54,7 @@ The counter uses two labels: `connector` (which connector was selected) and `out
 The fallback branch — where every connector supports the currency but every success rate falls below the floor — had no test. The test that was labelled as covering this case was actually testing unsupported currency, which is the rejected path. These are distinct failure modes: one means the system found eligible connectors and degraded gracefully, the other means no connectors applied at all. Covering the fallback branch required an isolated configuration that forces all connectors below the floor while keeping currency support intact.
 
  
+## Claude Code Session
+Claude Code used via VS Code extension for Round 2. 
+Session export (/export) not available in VS Code extension environment.
+Conversation screenshot available in /claude-screenshots/ folder.
