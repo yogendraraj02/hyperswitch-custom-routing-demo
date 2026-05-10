@@ -9,10 +9,31 @@ describe('Cost-aware routing', () => {
     expect(result.decisions).toBeDefined();
   });
 
-  test('edge case: all connectors below floor -> fallback to highest success rate', () => {
-    const result = selectConnector('XYZ', 1000);
-    // No connector supports XYZ, all skipped
-    expect(result.selected).toBeNull();
+  test('fallback: all connectors below success rate floor -> selects highest success rate', () => {
+    // Raise the floor to 0.99 so every connector (max 0.97) fails the check,
+    // but all support USD — triggering the fallback branch.
+    jest.mock('../src/costConfig', () => ({
+      COST_TABLE: {
+        stripe:     { USD: 2.9 },
+        paypal:     { USD: 3.5 },
+        fauxpay:    { USD: 1.8 },
+        pretendpay: { USD: 2.0 },
+      },
+      SUCCESS_RATE_FLOOR: 0.99,
+      SUCCESS_RATES: {
+        stripe:     0.97,
+        paypal:     0.91,
+        fauxpay:    0.82,
+        pretendpay: 0.88,
+      },
+    }));
+    jest.resetModules();
+
+    const { selectConnector: select } = require('../src/selectConnector.helper');
+    const result = select('USD', 1000);
+
+    expect(result.selected).toBe('stripe'); // highest success rate (0.97)
+    expect(result.reason).toMatch(/fallback/i);
     expect(result.decisions.every(d => d.skipped)).toBe(true);
   });
 
